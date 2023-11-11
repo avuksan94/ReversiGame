@@ -87,7 +87,7 @@ public class GameController {
             for(int j = 0; j < GameConstants.BOARD_SIZE; j++) {
                 if (serializedDiskColors[i][j] != null) {
                     diskColors[i][j] = serializedDiskColors[i][j].toColor();
-                    DiskUtils.createStarterDisk(_reversiGameBoard.getCells(), i, j, diskColors[i][j]);
+                    DiskUtils.createDisk(_reversiGameBoard.getCells(), i, j, diskColors[i][j]);
                 } //problem with load when null
             }
         }

@@ -6,7 +6,6 @@ import java.io.Serializable;
 
 //https://stackoverflow.com/questions/36748358/saving-color-as-state-in-a-javafx-application
 
-
 public class SerializableColor implements Serializable {
     private final double red;
     private final double green;
@@ -26,7 +25,6 @@ public class SerializableColor implements Serializable {
 
     public static SerializableColor fromColor(Color color) {
         if (color == null) {
-            // Handle the null case, maybe return a default SerializableColor or null
             return null;
         }
         return new SerializableColor(color.getRed(), color.getGreen(), color.getBlue(), color.getOpacity());

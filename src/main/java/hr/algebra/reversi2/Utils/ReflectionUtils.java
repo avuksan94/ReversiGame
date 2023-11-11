@@ -80,6 +80,8 @@ public class ReflectionUtils {
 
         methodDetails.append(method.getName());
 
+        appendExceptions(method,methodDetails);
+
         // method parameters
         methodDetails.append("(");
         Class<?>[] parameterTypes = method.getParameterTypes();
@@ -116,6 +118,7 @@ public class ReflectionUtils {
         return constructorDetails.toString();
     }
 
+    //https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Executable.html
     private static void appendAnnotations(Executable executable, StringBuilder details) {
         Annotation[] annotations = executable.getDeclaredAnnotations();
         for (Annotation annotation : annotations) {

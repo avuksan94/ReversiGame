@@ -187,10 +187,10 @@ public class GameBoardReversi {
     public void placeBeginningDisks(){
         int halfSize = GameConstants.BOARD_SIZE / 2;
 
-        DiskUtils.createStarterDisk(cells, halfSize - 1, halfSize - 1, GameConstants.PLAYER2_COLOR);
-        DiskUtils.createStarterDisk(cells, halfSize - 1, halfSize, GameConstants.PLAYER1_COLOR);
-        DiskUtils.createStarterDisk(cells, halfSize, halfSize - 1, GameConstants.PLAYER1_COLOR);
-        DiskUtils.createStarterDisk(cells, halfSize, halfSize, GameConstants.PLAYER2_COLOR);
+        DiskUtils.createDisk(cells, halfSize - 1, halfSize - 1, GameConstants.PLAYER2_COLOR);
+        DiskUtils.createDisk(cells, halfSize - 1, halfSize, GameConstants.PLAYER1_COLOR);
+        DiskUtils.createDisk(cells, halfSize, halfSize - 1, GameConstants.PLAYER1_COLOR);
+        DiskUtils.createDisk(cells, halfSize, halfSize, GameConstants.PLAYER2_COLOR);
     }
 
     private boolean checkEndGame() {

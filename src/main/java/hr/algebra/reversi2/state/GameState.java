@@ -7,7 +7,7 @@ import hr.algebra.reversi2.constants.GameConstants;
 import java.io.Serializable;
 
 public class GameState implements Serializable {
-
+    private static final long serialVersionUID = 1L;
     private int playerTurn;
     private SerializableColor[][] diskColors;  // SerializableColor instead of Color, because color is not Serializable
     private int player1Score;

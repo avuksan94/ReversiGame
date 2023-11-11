@@ -5,14 +5,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class TxtDocumentationGenerator {
-    private TxtDocumentationAdapter adapter;
+    private final TxtDocumentationAdapter _adapter;
 
     public TxtDocumentationGenerator() {
-        this.adapter = new TxtDocumentationAdapter(new HtmlDocumentationGenerator());
+        _adapter = new TxtDocumentationAdapter(new HtmlDocumentationGenerator());
     }
 
     public void generateTxtDocumentation(Path path) {
-        String txtContent = adapter.generateContent();
+        String txtContent = _adapter.generateContent();
 
         try {
             Files.createDirectories(path.getParent());

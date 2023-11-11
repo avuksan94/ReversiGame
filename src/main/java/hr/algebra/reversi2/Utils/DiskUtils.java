@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.List;
 
 public class DiskUtils {
-    public static void createStarterDisk(Pane[][] cells, int row, int col, Color color){
+    public static void createDisk(Pane[][] cells, int row, int col, Color color){
         Circle disk = new Circle(GameConstants.DISK_SIZE);
         disk.setFill(color);
 

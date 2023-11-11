@@ -16,28 +16,12 @@ public class HtmlDocumentationGenerator{
     public HtmlDocumentationGenerator() {
     }
 
-    /*
-    public void generateDocumentation() {
-        List<String> classFiles = ReflectionUtils.getClassFiles();
-
-        StringBuilder html = new StringBuilder();
-        addHtmlHeader(html);
-
-        for (String classFile : classFiles) {
-            appendClassDocumentation(html, classFile);
-        }
-
-        addHtmlFooter(html);
-        writeHtmlToFile(html.toString());
-    }
-     */
-
     private static void addHtmlHeader(StringBuilder html) {
         html.append("""
             <!DOCTYPE html>
             <html>
             <head>
-            <title>Page Title</title>
+            <title>HTML Document Generator</title>
             </head>
             <body>
             """);
@@ -120,17 +104,6 @@ public class HtmlDocumentationGenerator{
             </html>
             """);
     }
-
-    /*
-    private void writeHtmlToFile(String html) {
-        try {
-            Files.createDirectories(DocumentationConstants.DOCUMENTATION_PATH.getParent());
-            Files.write(DocumentationConstants.DOCUMENTATION_PATH, html.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException("Error writing documentation file", e);
-        }
-    }
-     */
 
     //custom file saving
     public void writeHtmlToFile(String html, Path path) {
