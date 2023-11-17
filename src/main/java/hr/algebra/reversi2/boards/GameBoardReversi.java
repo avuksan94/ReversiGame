@@ -1,11 +1,10 @@
 package hr.algebra.reversi2.boards;
 
-import hr.algebra.reversi2.Utils.DialogUtils;
-import hr.algebra.reversi2.Utils.DiskUtils;
-import hr.algebra.reversi2.Utils.PlayerUtils;
+import hr.algebra.reversi2.Utils.*;
 import hr.algebra.reversi2.constants.GameConstants;
 import hr.algebra.reversi2.enums.PlayerRole;
 import hr.algebra.reversi2.logic.GameLogic;
+import hr.algebra.reversi2.state.GameState;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
@@ -33,7 +32,6 @@ public class GameBoardReversi {
         cells = new Pane[GameConstants.BOARD_SIZE][GameConstants.BOARD_SIZE];
         playerTurn = 0;
         validMoves = 0;
-        System.out.println("Im in the constructor!!!");
         gameLogic = new GameLogic();
         initBoard();
         loadingGame = false;
@@ -55,7 +53,6 @@ public class GameBoardReversi {
     }
 
     private void initBoard() {
-        System.out.println("Im in intiBoard and valid moves is: " + validMoves);
         for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
             for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
                 Pane cell = new Pane();
@@ -80,6 +77,11 @@ public class GameBoardReversi {
                     }
                     PlayerRole nextPlayerRole = PlayerUtils.getCurrentPlayerRole(playerTurn);
                     validMoves = gameLogic.showValidMoves(nextPlayerRole, cells);
+
+                    //NETWORKING
+                    GameState gameStateToSend = GameStateUtils.createGameState(this);
+                    NetworkingUtils.sendGameState(gameStateToSend);
+                    //**********************************************************************
 
                     endGame();
                 });
@@ -181,7 +183,6 @@ public class GameBoardReversi {
         placeBeginningDisks();
         PlayerRole nextPlayerRole = PlayerUtils.getCurrentPlayerRole(playerTurn);
         gameLogic.showValidMoves(nextPlayerRole, cells);
-
     }
 
     public void placeBeginningDisks(){

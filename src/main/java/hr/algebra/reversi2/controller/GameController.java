@@ -3,16 +3,19 @@ package hr.algebra.reversi2.controller;
 import hr.algebra.reversi2.Utils.DialogUtils;
 import hr.algebra.reversi2.Utils.DiskUtils;
 import hr.algebra.reversi2.Utils.FileUtils;
+import hr.algebra.reversi2.Utils.PlayerUtils;
 import hr.algebra.reversi2.boards.GameBoardFactory;
 import hr.algebra.reversi2.boards.GameBoardReversi;
 import hr.algebra.reversi2.constants.GameConstants;
 import hr.algebra.reversi2.documentation.HtmlDocumentationGenerator;
 import hr.algebra.reversi2.documentation.TxtDocumentationGenerator;
+import hr.algebra.reversi2.enums.PlayerRole;
 import hr.algebra.reversi2.state.GameState;
 import hr.algebra.reversi2.state.SerializableColor;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -21,14 +24,13 @@ import javafx.stage.Stage;
 import java.io.File;
 
 public class GameController {
-    private GameBoardReversi _reversiGameBoard;
+    private static GameBoardReversi _reversiGameBoard;
     @FXML
     private BorderPane bpMainGame;
     @FXML
     private Label lbDisplayP1Score;
     @FXML
     private Label lbDisplayP2Score;
-
     @FXML
     public void initialize() throws Exception {
         initGameBoard();
@@ -56,13 +58,16 @@ public class GameController {
     }
 
     public void saveGame() {
-        System.out.println("Valid moves" + _reversiGameBoard.getValidMoves());
-        System.out.println("Turn num" + _reversiGameBoard.getPlayerTurn());
         FileUtils.saveGame(_reversiGameBoard);
         DialogUtils.displaySaveSuccessMessage();
     }
 
     public void loadGame() {
+        loading();
+        DialogUtils.displayLoadSuccessMessage();
+    }
+
+    private void loading() {
         _reversiGameBoard.setLoadingGame(true);
 
         _reversiGameBoard.clearBoardForLoad();
@@ -92,7 +97,6 @@ public class GameController {
             }
         }
         _reversiGameBoard.setLoadingGame(false);
-        DialogUtils.displayLoadSuccessMessage();
     }
 
     public void saveAsHtml(){
@@ -128,4 +132,46 @@ public class GameController {
         }
     }
 
+    public static void refreshGameBoard(GameState gameState) {
+        restoreGameState(gameState);
+        //enablePanes(true);
+    }
+
+    private static void restoreGameState(GameState gameState) {
+        _reversiGameBoard.clearBoardForLoad();
+        _reversiGameBoard.setPlayerTurn(gameState.getPlayerTurn());
+        _reversiGameBoard.setPlayer1Score(gameState.getPlayer1Score());
+        _reversiGameBoard.setPlayer2Score(gameState.getPlayer2Score());
+        _reversiGameBoard.setValidMoves(gameState.getValidMoves());
+
+        SerializableColor[][] serializedDiskColors = gameState.getDiskColors();
+        Color[][] diskColors = new Color[GameConstants.BOARD_SIZE][GameConstants.BOARD_SIZE];
+
+        for(int i = 0; i < GameConstants.BOARD_SIZE; i++) {
+            for(int j = 0; j < GameConstants.BOARD_SIZE; j++) {
+                if (serializedDiskColors[i][j] != null) {
+                    diskColors[i][j] = serializedDiskColors[i][j].toColor();
+                    DiskUtils.createDisk(_reversiGameBoard.getCells(), i, j, diskColors[i][j]);
+                }
+            }
+        }
+
+        if (_reversiGameBoard.getValidMoves() == 0){
+            PlayerRole winner = PlayerUtils.getCurrentPlayerRole(_reversiGameBoard.getPlayerTurn());
+            DialogUtils.displayWinner(winner.toString());
+            clearAfterVictory(_reversiGameBoard.getCells());
+        }
+    }
+
+    private static void clearAfterVictory(Pane[][] cells){
+        _reversiGameBoard.resetBoard(cells);
+    }
+
+    public static void enablePanes(Boolean enable) {
+        for(int i = 0; i < GameConstants.BOARD_SIZE; i++) {
+            for(int j = 0; j < GameConstants.BOARD_SIZE; j++) {
+                _reversiGameBoard.getCells()[i][j].setDisable(!enable);
+            }
+        }
+    }
 }

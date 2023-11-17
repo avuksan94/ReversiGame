@@ -4,15 +4,20 @@ import hr.algebra.reversi2.Utils.DiskUtils;
 import hr.algebra.reversi2.boards.GameBoardReversi;
 import hr.algebra.reversi2.constants.GameConstants;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 public class GameState implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private int playerTurn;
     private SerializableColor[][] diskColors;  // SerializableColor instead of Color, because color is not Serializable
     private int player1Score;
     private int player2Score;
     private int validMoves;
+
+    public GameState() {
+    }
 
     public GameState(GameBoardReversi board) {
         this.playerTurn = board.getPlayerTurn();

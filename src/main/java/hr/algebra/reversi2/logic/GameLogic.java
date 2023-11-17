@@ -96,17 +96,6 @@ public class GameLogic {
         return validMovesCounter;
     }
 
-    //public void clearHighlights(Pane[][] cells) {
-    //
-    //    for (int row = 0; row < cells.length; row++) {
-    //        for (int col = 0; col < cells[row].length; col++) {
-    //            cells[row][col].getChildren().removeIf(child -> child instanceof Circle &&
-    //                    (((Circle) child).getFill() == GameConstants.PLAYER1_POSSIBLE_MOVE ||
-    //                            ((Circle) child).getFill() == GameConstants.PLAYER2_POSSIBLE_MOVE));
-    //        }
-    //    }
-    //}
-
     public void clearHighlights(Pane[][] cells) {
         int clearedCount = 0;
 
