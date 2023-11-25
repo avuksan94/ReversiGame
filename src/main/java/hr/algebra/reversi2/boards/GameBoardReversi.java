@@ -78,6 +78,9 @@ public class GameBoardReversi {
                     validMoves = gameLogic.showValidMoves(nextPlayerRole, cells);
 
                     if (moveSuccess){
+                        if(checkEndGame()){
+                            playerTurn--;
+                        }
                         endGame();
                     }
                 });
@@ -129,6 +132,11 @@ public class GameBoardReversi {
         playerTurn = 0;
     }
 
+    public void resetScore(){
+        player1ScoreProperty().set(0);
+        player2ScoreProperty().set(0);
+    }
+
     public void setPlayerTurn(int playerTurn) {
         this.playerTurn = playerTurn;
     }
@@ -176,7 +184,6 @@ public class GameBoardReversi {
         if (playerOneScore == playerTwoScore) {
             DialogUtils.displayDraw();
             resetBoard(cells);
-            resetTurns();
         } else if (playerOneScore > playerTwoScore) {
             DialogUtils.displayWinner("Player one");
             resetBoard(cells);
@@ -189,6 +196,7 @@ public class GameBoardReversi {
     public void resetBoard(Pane[][] cells){
         GameLogic.clearBoard(cells);
         resetTurns();
+        resetScore();
         placeBeginningDisks();
         PlayerRole nextPlayerRole = PlayerUtils.getCurrentPlayerRole(playerTurn);
         gameLogic.showValidMoves(nextPlayerRole, cells);

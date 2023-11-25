@@ -1,5 +1,6 @@
 package hr.algebra.reversi2.controller;
 
+import hr.algebra.reversi2.GameApplication;
 import hr.algebra.reversi2.Utils.*;
 import hr.algebra.reversi2.boards.GameBoardFactory;
 import hr.algebra.reversi2.boards.GameBoardReversi;
@@ -7,10 +8,13 @@ import hr.algebra.reversi2.constants.GameConstants;
 import hr.algebra.reversi2.documentation.HtmlDocumentationGenerator;
 import hr.algebra.reversi2.documentation.TxtDocumentationGenerator;
 import hr.algebra.reversi2.enums.PlayerRole;
+import hr.algebra.reversi2.messages.MessageState;
 import hr.algebra.reversi2.state.GameState;
 import hr.algebra.reversi2.state.SerializableColor;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -19,6 +23,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.rmi.RemoteException;
 
 public class GameController {
     private static GameBoardReversi _reversiGameBoard;
@@ -29,9 +34,17 @@ public class GameController {
     @FXML
     private Label lbDisplayP2Score;
     @FXML
+    private Button btnSendMessage;
+    @FXML
+    private TextArea taSendMessage;
+    @FXML
+    private TextArea taAllMessages;
+    @FXML
     public void initialize() throws Exception {
         initGameBoard();
         updateScoreLabels();
+        MessageUtils.startChatMessagesRefreshThread(taAllMessages);
+        setupSendMessageButton();
     }
 
     private void initGameBoard() throws Exception {
@@ -47,6 +60,28 @@ public class GameController {
     private void updateScoreLabels() {
         lbDisplayP1Score.textProperty().bind(_reversiGameBoard.player1ScoreProperty().asString("%d"));
         lbDisplayP2Score.textProperty().bind(_reversiGameBoard.player2ScoreProperty().asString("%d"));
+    }
+
+    public void setupSendMessageButton() {
+        btnSendMessage.setOnAction(event -> {
+            try {
+                StringBuilder sbMessage = new StringBuilder();
+                String playerSendingMsg = GameApplication.player.name();
+                String message = taSendMessage.getText();
+                sbMessage.append(playerSendingMsg);
+                sbMessage.append(": ");
+                sbMessage.append(message);
+
+                if (!message.isEmpty()) {
+                    MessageState messageState = new MessageState();
+                    messageState.addMessage(sbMessage.toString());
+                    GameApplication.remoteChatService.updateChat(messageState);
+                    taSendMessage.clear(); // Clear the text area after sending the message
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @FXML

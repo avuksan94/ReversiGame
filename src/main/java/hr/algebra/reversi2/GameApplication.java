@@ -1,7 +1,10 @@
 package hr.algebra.reversi2;
 
+import hr.algebra.reversi2.constants.ConfigurationConstants;
 import hr.algebra.reversi2.controller.GameController;
 import hr.algebra.reversi2.enums.PlayerRole;
+import hr.algebra.reversi2.messages.RemoteMessageService;
+import hr.algebra.reversi2.messages.RemoteMessageServiceImpl;
 import hr.algebra.reversi2.multiplayer.GameClient;
 import hr.algebra.reversi2.multiplayer.GameServer;
 import javafx.application.Application;
@@ -10,9 +13,16 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 
 public class GameApplication extends Application {
     public static PlayerRole player;
+    public static RemoteMessageService remoteChatService;
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("gameMain-view.fxml"));
@@ -28,7 +38,10 @@ public class GameApplication extends Application {
 
         if (PlayerRole.Player1.name().equals(player.name())) {
             System.out.println("Starting as Player 1 (Server)");
-            new Thread(GameServer::startServer).start();
+            new Thread(() -> {
+                startRMIServer();
+                GameServer.startServer();
+            }).start();
         } else if (PlayerRole.Player2.name().equals(player.name())) {
             System.out.println("Starting as Player 2 (Client)");
             new Thread(() -> {
@@ -36,14 +49,33 @@ public class GameApplication extends Application {
                     Thread.sleep(1000);
                     GameController.managePanes(false);
                     GameClient.startClient();
+                    remoteChatService = startRMIClient();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                } catch (IOException e) {
+                } catch (IOException | NotBoundException e) {
                     throw new RuntimeException(e);
                 }
             }).start();
         }
 
         launch();
+    }
+
+    public static void startRMIServer() {
+        try {
+            remoteChatService = new RemoteMessageServiceImpl();
+            RemoteMessageService stub = (RemoteMessageService) UnicastRemoteObject.exportObject(remoteChatService, 0);
+            Registry registry = LocateRegistry.createRegistry(ConfigurationConstants.RMI_PORT);
+            registry.rebind(RemoteMessageService.REMOTE_OBJECT_NAME, stub);
+            System.err.println("RMI Server is up and ready");
+        } catch (Exception e) {
+            System.err.println("Server exception: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public static RemoteMessageService startRMIClient() throws RemoteException, NotBoundException {
+        Registry registry = LocateRegistry.getRegistry(ConfigurationConstants.HOST, ConfigurationConstants.RMI_PORT);
+        return (RemoteMessageService) registry.lookup(RemoteMessageService.REMOTE_OBJECT_NAME);
     }
 }
