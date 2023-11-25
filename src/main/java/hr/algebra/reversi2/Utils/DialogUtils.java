@@ -31,4 +31,9 @@ public class DialogUtils {
                 "You have loaded your game!");
     }
 
+    public static void displayPlayerSurrender() {
+        showInformationDialog("Surrender initiated!", "Player has surrendered their turn!",
+                "You have surrendered your turn to the other player!");
+    }
+
 }

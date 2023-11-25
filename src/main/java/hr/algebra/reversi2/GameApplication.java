@@ -1,5 +1,6 @@
 package hr.algebra.reversi2;
 
+import hr.algebra.reversi2.controller.GameController;
 import hr.algebra.reversi2.enums.PlayerRole;
 import hr.algebra.reversi2.multiplayer.GameClient;
 import hr.algebra.reversi2.multiplayer.GameServer;
@@ -22,7 +23,6 @@ public class GameApplication extends Application {
     }
 
     public static void main(String[] args) {
-        //if it stops working or i get bugs im gonna comment this out
         System.out.println("Player: " + args[0]);
         player = PlayerRole.valueOf(args[0]);
 
@@ -33,7 +33,8 @@ public class GameApplication extends Application {
             System.out.println("Starting as Player 2 (Client)");
             new Thread(() -> {
                 try {
-                    Thread.sleep(1000); // Small delay to ensure server is up
+                    Thread.sleep(1000);
+                    GameController.managePanes(false);
                     GameClient.startClient();
                 } catch (InterruptedException e) {
                     e.printStackTrace();

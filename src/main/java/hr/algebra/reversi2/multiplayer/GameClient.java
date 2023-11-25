@@ -15,7 +15,7 @@ public class GameClient {
             while (true) {
                 GameState gameState = NetworkingUtils.receiveGameState();
                 if (gameState != null) {
-                    System.out.println("GameState received from server.");
+                    System.err.println("GameState received from server.");
                     Platform.runLater(() -> GameController.refreshGameBoard(gameState));
                 } else {
                     break;

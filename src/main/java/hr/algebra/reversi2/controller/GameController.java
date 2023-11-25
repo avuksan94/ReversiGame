@@ -1,9 +1,6 @@
 package hr.algebra.reversi2.controller;
 
-import hr.algebra.reversi2.Utils.DialogUtils;
-import hr.algebra.reversi2.Utils.DiskUtils;
-import hr.algebra.reversi2.Utils.FileUtils;
-import hr.algebra.reversi2.Utils.PlayerUtils;
+import hr.algebra.reversi2.Utils.*;
 import hr.algebra.reversi2.boards.GameBoardFactory;
 import hr.algebra.reversi2.boards.GameBoardReversi;
 import hr.algebra.reversi2.constants.GameConstants;
@@ -54,7 +51,12 @@ public class GameController {
 
     @FXML
     private void startGame(){
-
+        _reversiGameBoard.resetBoard(_reversiGameBoard.getCells());
+        _reversiGameBoard.placeBeginningDisks();
+        _reversiGameBoard.setPlayer1Score(0);
+        _reversiGameBoard.setPlayer2Score(0);
+        GameState gameStateToSend = GameStateUtils.createGameState(_reversiGameBoard);
+        NetworkingUtils.sendGameState(gameStateToSend);
     }
 
     public void saveGame() {
@@ -64,6 +66,8 @@ public class GameController {
 
     public void loadGame() {
         loading();
+        GameState loadedGameState = GameStateUtils.createGameState(_reversiGameBoard);
+        NetworkingUtils.sendGameState(loadedGameState);
         DialogUtils.displayLoadSuccessMessage();
     }
 
@@ -134,7 +138,11 @@ public class GameController {
 
     public static void refreshGameBoard(GameState gameState) {
         restoreGameState(gameState);
-        //enablePanes(true);
+        _reversiGameBoard.enablePanes(true);
+    }
+
+    public static void managePanes(boolean enable) {
+        _reversiGameBoard.enablePanes(enable);
     }
 
     private static void restoreGameState(GameState gameState) {
@@ -165,13 +173,5 @@ public class GameController {
 
     private static void clearAfterVictory(Pane[][] cells){
         _reversiGameBoard.resetBoard(cells);
-    }
-
-    public static void enablePanes(Boolean enable) {
-        for(int i = 0; i < GameConstants.BOARD_SIZE; i++) {
-            for(int j = 0; j < GameConstants.BOARD_SIZE; j++) {
-                _reversiGameBoard.getCells()[i][j].setDisable(!enable);
-            }
-        }
     }
 }

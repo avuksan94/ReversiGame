@@ -12,7 +12,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 
-
 //https://www.simplilearn.com/tutorials/data-structure-tutorial/two-dimensional-arrays
 //https://www.redblobgames.com/grids/parts/
 //https://docs.oracle.com/javase/8/javafx/api/javafx/beans/property/IntegerProperty.html
@@ -78,12 +77,9 @@ public class GameBoardReversi {
                     PlayerRole nextPlayerRole = PlayerUtils.getCurrentPlayerRole(playerTurn);
                     validMoves = gameLogic.showValidMoves(nextPlayerRole, cells);
 
-                    //NETWORKING
-                    GameState gameStateToSend = GameStateUtils.createGameState(this);
-                    NetworkingUtils.sendGameState(gameStateToSend);
-                    //**********************************************************************
-
-                    endGame();
+                    if (moveSuccess){
+                        endGame();
+                    }
                 });
 
                 cells[row][col] = cell;
@@ -95,6 +91,10 @@ public class GameBoardReversi {
 
         PlayerRole initialPlayerRole = PlayerUtils.getCurrentPlayerRole(playerTurn);
         gameLogic.showValidMoves(initialPlayerRole, cells); //valid moves for the starting player
+
+        if (initialPlayerRole.equals(PlayerRole.Player1)) {
+            enablePanes(true);
+        }
     }
 
     public int getPlayerScore(PlayerRole player, Pane[][] cells){
@@ -155,6 +155,14 @@ public class GameBoardReversi {
 
     private void endGame() {
         System.out.println("Im in endgame: " + validMoves);
+        System.out.println("Player 1: " + getPlayerScore(PlayerRole.Player1, cells));
+        System.out.println("Player 2: " + getPlayerScore(PlayerRole.Player2, cells));
+
+        GameState gameStateToSend = GameStateUtils.createGameState(this);
+        NetworkingUtils.sendGameState(gameStateToSend);
+
+        enablePanes(false);
+        //**********************************************************************
         if (loadingGame) {
             return;
         }
@@ -168,6 +176,7 @@ public class GameBoardReversi {
         if (playerOneScore == playerTwoScore) {
             DialogUtils.displayDraw();
             resetBoard(cells);
+            resetTurns();
         } else if (playerOneScore > playerTwoScore) {
             DialogUtils.displayWinner("Player one");
             resetBoard(cells);
@@ -195,8 +204,14 @@ public class GameBoardReversi {
     }
 
     private boolean checkEndGame() {
-        //System.out.println("Checking here");
-        //System.out.println("Valid moves" + getValidMoves());
         return getValidMoves() == 0;
+    }
+
+    public void enablePanes(Boolean enable) {
+        for(int i = 0; i < GameConstants.BOARD_SIZE; i++) {
+            for(int j = 0; j < GameConstants.BOARD_SIZE; j++) {
+                cells[i][j].setDisable(!enable);
+            }
+        }
     }
 }

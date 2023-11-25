@@ -98,7 +98,6 @@ public class GameLogic {
 
     public void clearHighlights(Pane[][] cells) {
         int clearedCount = 0;
-
         for (Pane[] cell : cells) {
             for (int col = 0; col < cell.length; col++) {
                 List<Node> toRemove = cell[col].getChildren().stream()
@@ -112,9 +111,21 @@ public class GameLogic {
                 cell[col].getChildren().removeAll(toRemove);
             }
         }
+    }
 
-        // Print the counter value
-        //System.out.println("Cleared " + clearedCount + " highlights.");
+    public void clearSpecificHighlights(Pane[][] cells,Color color) {
+        int clearedCount = 0;
+        for (Pane[] cell : cells) {
+            for (int col = 0; col < cell.length; col++) {
+                List<Node> toRemove = cell[col].getChildren().stream()
+                        .filter(child -> child instanceof Circle &&
+                                (((Circle) child).getFill().equals(color)))
+                        .toList();
+
+                clearedCount += toRemove.size();
+                cell[col].getChildren().removeAll(toRemove);
+            }
+        }
     }
 
 

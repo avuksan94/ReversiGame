@@ -22,11 +22,10 @@ public class NetworkingUtils {
         }
 
         try {
-            // Create a socket address from the client port
-            InetAddress localAddress = InetAddress.getByName("localhost");
+            // Creating a socket address from the client port
+            InetAddress localAddress = InetAddress.getByName(ConfigurationConstants.HOST);
             InetSocketAddress socketAddress = new InetSocketAddress(localAddress, ConfigurationConstants.CLIENT_PORT);
 
-            // Connect to the server from the specified client port
             socket = new Socket();
             socket.bind(socketAddress);
             socket.connect(new InetSocketAddress(ConfigurationConstants.HOST, ConfigurationConstants.SERVER_PORT));
@@ -56,8 +55,9 @@ public class NetworkingUtils {
         if (outputStream != null) {
             try {
                 outputStream.writeObject(gameState);
+                //https://medium.com/@gabriellamedas/remember-to-flush-your-streams-a0ce23043947
                 outputStream.flush();
-                System.out.println("GameState sent.");
+                System.err.println("GameState sent.");
             } catch (IOException e) {
                 e.printStackTrace();
                 closeConnection();
