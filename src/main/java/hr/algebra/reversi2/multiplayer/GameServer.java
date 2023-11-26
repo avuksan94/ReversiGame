@@ -1,8 +1,9 @@
 package hr.algebra.reversi2.multiplayer;
 
 import hr.algebra.reversi2.Utils.NetworkingUtils;
-import hr.algebra.reversi2.constants.ConfigurationConstants;
 import hr.algebra.reversi2.controller.GameController;
+import hr.algebra.reversi2.enums.ConfigurationKey;
+import hr.algebra.reversi2.jndi.ConfigurationReader;
 import hr.algebra.reversi2.state.GameState;
 import javafx.application.Platform;
 
@@ -12,7 +13,7 @@ import java.net.Socket;
 
 public class GameServer {
     public static void startServer() {
-        try (ServerSocket serverSocket = new ServerSocket(ConfigurationConstants.SERVER_PORT)) {
+        try (ServerSocket serverSocket = new ServerSocket(ConfigurationReader.getInstance().readIntegerValueForKey(ConfigurationKey.SERVER_PORT))) {
             System.err.println("Server -> listening on port: " + serverSocket.getLocalPort());
             while (true) { // Keep listening for new clients
                 Socket clientSocket = serverSocket.accept();

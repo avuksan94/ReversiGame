@@ -68,6 +68,7 @@ public class GameController {
                 StringBuilder sbMessage = new StringBuilder();
                 String playerSendingMsg = GameApplication.player.name();
                 String message = taSendMessage.getText();
+
                 sbMessage.append(playerSendingMsg);
                 sbMessage.append(": ");
                 sbMessage.append(message);
@@ -76,7 +77,7 @@ public class GameController {
                     MessageState messageState = new MessageState();
                     messageState.addMessage(sbMessage.toString());
                     GameApplication.remoteChatService.updateChat(messageState);
-                    taSendMessage.clear(); // Clear the text area after sending the message
+                    taSendMessage.clear(); // Clear the text area after sending the mssage
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();

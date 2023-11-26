@@ -1,8 +1,9 @@
 package hr.algebra.reversi2;
 
-import hr.algebra.reversi2.constants.ConfigurationConstants;
 import hr.algebra.reversi2.controller.GameController;
+import hr.algebra.reversi2.enums.ConfigurationKey;
 import hr.algebra.reversi2.enums.PlayerRole;
+import hr.algebra.reversi2.jndi.ConfigurationReader;
 import hr.algebra.reversi2.messages.RemoteMessageService;
 import hr.algebra.reversi2.messages.RemoteMessageServiceImpl;
 import hr.algebra.reversi2.multiplayer.GameClient;
@@ -65,7 +66,7 @@ public class GameApplication extends Application {
         try {
             remoteChatService = new RemoteMessageServiceImpl();
             RemoteMessageService stub = (RemoteMessageService) UnicastRemoteObject.exportObject(remoteChatService, 0);
-            Registry registry = LocateRegistry.createRegistry(ConfigurationConstants.RMI_PORT);
+            Registry registry = LocateRegistry.createRegistry(ConfigurationReader.getInstance().readIntegerValueForKey(ConfigurationKey.RMI_PORT));
             registry.rebind(RemoteMessageService.REMOTE_OBJECT_NAME, stub);
             System.err.println("RMI Server is up and ready");
         } catch (Exception e) {
@@ -75,7 +76,7 @@ public class GameApplication extends Application {
     }
 
     public static RemoteMessageService startRMIClient() throws RemoteException, NotBoundException {
-        Registry registry = LocateRegistry.getRegistry(ConfigurationConstants.HOST, ConfigurationConstants.RMI_PORT);
+        Registry registry = LocateRegistry.getRegistry(ConfigurationReader.getInstance().readStringValueForKey(ConfigurationKey.HOST), ConfigurationReader.getInstance().readIntegerValueForKey(ConfigurationKey.RMI_PORT));
         return (RemoteMessageService) registry.lookup(RemoteMessageService.REMOTE_OBJECT_NAME);
     }
 }

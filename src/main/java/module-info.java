@@ -3,6 +3,7 @@ module hr.algebra.reversi2 {
     requires javafx.fxml;
     requires java.desktop;
     requires java.rmi;
+    requires java.naming;
 
 
     opens hr.algebra.reversi2 to javafx.fxml;

@@ -1,6 +1,7 @@
 package hr.algebra.reversi2.Utils;
 
-import hr.algebra.reversi2.constants.ConfigurationConstants;
+import hr.algebra.reversi2.enums.ConfigurationKey;
+import hr.algebra.reversi2.jndi.ConfigurationReader;
 import hr.algebra.reversi2.state.GameState;
 
 import java.io.IOException;
@@ -23,13 +24,13 @@ public class NetworkingUtils {
 
         try {
             // Creating a socket address from the client port
-            InetAddress localAddress = InetAddress.getByName(ConfigurationConstants.HOST);
-            InetSocketAddress socketAddress = new InetSocketAddress(localAddress, ConfigurationConstants.CLIENT_PORT);
+            InetAddress localAddress = InetAddress.getByName(ConfigurationReader.getInstance().readStringValueForKey(ConfigurationKey.HOST));
+            InetSocketAddress socketAddress = new InetSocketAddress(localAddress, ConfigurationReader.getInstance().readIntegerValueForKey(ConfigurationKey.CLIENT_PORT));
 
             socket = new Socket();
             socket.bind(socketAddress);
-            socket.connect(new InetSocketAddress(ConfigurationConstants.HOST, ConfigurationConstants.SERVER_PORT));
-
+            socket.connect(new InetSocketAddress(ConfigurationReader.getInstance().readStringValueForKey(ConfigurationKey.HOST)
+                    ,ConfigurationReader.getInstance().readIntegerValueForKey(ConfigurationKey.SERVER_PORT)));
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
@@ -42,7 +43,8 @@ public class NetworkingUtils {
             if (isServer) {
                 socket = clientSocket;
             } else {
-                socket = new Socket(ConfigurationConstants.HOST, ConfigurationConstants.SERVER_PORT);
+                socket = new Socket(ConfigurationReader.getInstance().readStringValueForKey(ConfigurationKey.HOST)
+                        , ConfigurationReader.getInstance().readIntegerValueForKey(ConfigurationKey.SERVER_PORT));
             }
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
