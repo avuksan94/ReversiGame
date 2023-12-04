@@ -69,6 +69,7 @@ public class GameBoardReversi {
                         System.out.println("Move made!");
                         System.out.println("Clearing cells for player: " + PlayerUtils.getCurrentPlayerRole(playerTurn));
 
+                        enablePanes(false);
                         gameLogic.clearHighlights(cells);
                         playerTurn++;
                         player1Score.set(getPlayerScore(PlayerRole.Player1, cells));
@@ -78,9 +79,8 @@ public class GameBoardReversi {
                     validMoves = gameLogic.showValidMoves(nextPlayerRole, cells);
 
                     if (moveSuccess){
-                        if(checkEndGame()){
-                            playerTurn--;
-                        }
+                        GameState gameStateToSend = GameStateUtils.createGameState(this);
+                        NetworkingUtils.sendGameState(gameStateToSend);
                         endGame();
                     }
                 });
@@ -166,11 +166,6 @@ public class GameBoardReversi {
         System.out.println("Player 1: " + getPlayerScore(PlayerRole.Player1, cells));
         System.out.println("Player 2: " + getPlayerScore(PlayerRole.Player2, cells));
 
-        GameState gameStateToSend = GameStateUtils.createGameState(this);
-        NetworkingUtils.sendGameState(gameStateToSend);
-
-        enablePanes(false);
-        //**********************************************************************
         if (loadingGame) {
             return;
         }
