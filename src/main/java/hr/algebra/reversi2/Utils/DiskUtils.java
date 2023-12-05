@@ -72,4 +72,20 @@ public class DiskUtils {
         return null; // no disc found
     }
 
+    public static Color getFirstHighlighColor(Pane[][] cells) {
+        for (Pane[] row : cells) {
+            for (Pane cell : row) {
+                for (Node child : cell.getChildren()) {
+                    if (child instanceof Circle) {
+                        Circle disk = (Circle) child;
+                        if (disk.getFill().equals(GameConstants.PLAYER1_POSSIBLE_MOVE) ||
+                                disk.getFill().equals(GameConstants.PLAYER2_POSSIBLE_MOVE)) {
+                            return (Color) disk.getFill();
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

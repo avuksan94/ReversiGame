@@ -79,8 +79,6 @@ public class GameBoardReversi {
                     validMoves = gameLogic.showValidMoves(nextPlayerRole, cells);
 
                     if (moveSuccess){
-                        GameState gameStateToSend = GameStateUtils.createGameState(this);
-                        NetworkingUtils.sendGameState(gameStateToSend);
                         endGame();
                     }
                 });
@@ -165,6 +163,9 @@ public class GameBoardReversi {
         System.out.println("Im in endgame: " + validMoves);
         System.out.println("Player 1: " + getPlayerScore(PlayerRole.Player1, cells));
         System.out.println("Player 2: " + getPlayerScore(PlayerRole.Player2, cells));
+
+        GameState gameStateToSend = GameStateUtils.createGameState(this);
+        NetworkingUtils.sendGameState(gameStateToSend);
 
         if (loadingGame) {
             return;

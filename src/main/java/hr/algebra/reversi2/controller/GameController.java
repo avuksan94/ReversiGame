@@ -97,11 +97,17 @@ public class GameController {
 
     public void saveGame() {
         FileUtils.saveGame(_reversiGameBoard);
+        FileUtils.saveChat(taAllMessages);
         DialogUtils.displaySaveSuccessMessage();
     }
 
     public void loadGame() {
+        MessageUtils.setChatLoading(true); // Disable chat refresh
+
         loading();
+        chatLoading();
+
+        MessageUtils.setChatLoading(false); // Enable chat refresh
         GameState loadedGameState = GameStateUtils.createGameState(_reversiGameBoard);
         NetworkingUtils.sendGameState(loadedGameState);
         DialogUtils.displayLoadSuccessMessage();
@@ -137,6 +143,27 @@ public class GameController {
             }
         }
         _reversiGameBoard.setLoadingGame(false);
+
+        if (GameApplication.player.name().equals(GameConstants.PLAYER1_NAME)){
+            managePanes(DiskUtils.getFirstHighlighColor(_reversiGameBoard.getCells()) == GameConstants.PLAYER1_POSSIBLE_MOVE);
+        }
+        else if (GameApplication.player.name().equals(GameConstants.PLAYER2_NAME)){
+            managePanes(DiskUtils.getFirstHighlighColor(_reversiGameBoard.getCells()) == GameConstants.PLAYER2_POSSIBLE_MOVE);
+        }
+    }
+
+    private void chatLoading(){
+        MessageState recoveredMessageState = FileUtils.loadChat();
+        taAllMessages.clear();
+        taAllMessages.setText(TextUtils.getStringFromList(recoveredMessageState.getAllMessages()));
+
+        if (GameApplication.remoteChatService != null) {
+            try {
+                GameApplication.remoteChatService.updateChat(recoveredMessageState);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void saveAsHtml(){

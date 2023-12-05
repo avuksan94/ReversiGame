@@ -13,6 +13,10 @@ public class MessageState implements Serializable {
         allMessages = new ArrayList<>();
     }
 
+    public MessageState(List<String> allTextMessages) {
+        this.allMessages = allTextMessages;
+    }
+
     public void addMessage(String message) {
         allMessages.add(message);
     }
