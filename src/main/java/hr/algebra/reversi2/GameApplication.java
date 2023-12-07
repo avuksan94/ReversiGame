@@ -62,6 +62,7 @@ public class GameApplication extends Application {
         launch();
     }
 
+    //https://docs.oracle.com/javase/8/docs/api/java/rmi/registry/Registry.html
     public static void startRMIServer() {
         try {
             remoteChatService = new RemoteMessageServiceImpl();

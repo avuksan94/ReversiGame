@@ -102,12 +102,12 @@ public class GameController {
     }
 
     public void loadGame() {
-        MessageUtils.setChatLoading(true); // Disable chat refresh
+        MessageUtils.setChatLoading(true);
 
         loading();
         chatLoading();
 
-        MessageUtils.setChatLoading(false); // Enable chat refresh
+        MessageUtils.setChatLoading(false);
         GameState loadedGameState = GameStateUtils.createGameState(_reversiGameBoard);
         NetworkingUtils.sendGameState(loadedGameState);
         DialogUtils.displayLoadSuccessMessage();

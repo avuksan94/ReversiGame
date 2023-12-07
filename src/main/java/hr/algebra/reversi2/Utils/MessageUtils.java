@@ -20,6 +20,8 @@ public class MessageUtils {
                 new KeyFrame(
                         Duration.millis(1000),
                         event -> {
+                            //https://www.baeldung.com/java-synchronized
+                            //https://stackoverflow.com/questions/3047564/java-synchronized-method-lock-on-object-or-method
                             synchronized (chatRefreshLock) {
                                 if (GameApplication.remoteChatService != null && !isChatLoading) {
                                     try {
