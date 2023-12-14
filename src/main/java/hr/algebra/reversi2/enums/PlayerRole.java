@@ -1,5 +1,5 @@
 package hr.algebra.reversi2.enums;
 
 public enum PlayerRole {
-    Player1, Player2
+    Player1, Player2, Singleplayer
 }

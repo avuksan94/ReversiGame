@@ -2,6 +2,7 @@ package hr.algebra.reversi2.Utils;
 
 
 import hr.algebra.reversi2.constants.GameConstants;
+import hr.algebra.reversi2.dom.GameMoveWriter;
 import hr.algebra.reversi2.enums.PlayerRole;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -9,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.awt.*;
+import java.io.File;
 import java.util.List;
 
 public class DiskUtils {
@@ -58,6 +60,13 @@ public class DiskUtils {
             }
         }
         System.out.println("Sandwiched discs: " + sandwichedDisks);
+        GameMoveWriter gameMoveWriter = GameMoveWriter.getInstance();
+
+        String projectRoot = System.getProperty("user.dir");
+        String relativePath = "files";
+        String xmlPath = projectRoot + File.separator + relativePath + File.separator + GameConstants.GAME_MOVES_FILE_NAME;
+
+        gameMoveWriter.writeGameMove(xmlPath, currentPlayer, sandwichedDisks);
     }
 
     public static Color getDiskColor(Pane cell) {

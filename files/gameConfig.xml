@@ -1,0 +1,20 @@
+<GameConfig>
+    <BoardProperties>
+        <BOARD_SIZE>8</BOARD_SIZE>
+        <DISK_SIZE>20</DISK_SIZE>
+        <CELL_SIZE>50</CELL_SIZE>
+    </BoardProperties>
+    <PlayerProperties>
+        <PLAYER1_COLOR>Black</PLAYER1_COLOR>
+        <PLAYER2_COLOR>White</PLAYER2_COLOR>
+        <PLAYER1_POSSIBLE_MOVE>Yellow</PLAYER1_POSSIBLE_MOVE>
+        <PLAYER2_POSSIBLE_MOVE>LightBlue</PLAYER2_POSSIBLE_MOVE>
+        <PLAYER1_NAME>Player1</PLAYER1_NAME>
+        <PLAYER2_NAME>Player2</PLAYER2_NAME>
+    </PlayerProperties>
+    <FileProperties>
+        <FILE_NAME>savedGameReversi.dat</FILE_NAME>
+        <CHAT_FILE_NAME>savedChatReversi.dat</CHAT_FILE_NAME>
+        <GAME_MOVES_FILE_NAME>gameMoves.xml</GAME_MOVES_FILE_NAME>
+    </FileProperties>
+</GameConfig>

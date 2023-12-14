@@ -8,11 +8,16 @@ import hr.algebra.reversi2.messages.RemoteMessageService;
 import hr.algebra.reversi2.messages.RemoteMessageServiceImpl;
 import hr.algebra.reversi2.multiplayer.GameClient;
 import hr.algebra.reversi2.multiplayer.GameServer;
+import hr.algebra.reversi2.sax.ConfigHandler;
+import hr.algebra.reversi2.sax.GameConfig;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
 import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -22,11 +27,13 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class GameApplication extends Application {
     public static PlayerRole player;
+    private static GameConfig gameConfig;
     public static RemoteMessageService remoteChatService;
 
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("gameMain-view.fxml"));
+        parseGameConfig();
         Scene scene = new Scene(fxmlLoader.load(), 1300, 700);
         stage.setTitle("Reversi Game");
         stage.setScene(scene);
@@ -79,5 +86,26 @@ public class GameApplication extends Application {
     public static RemoteMessageService startRMIClient() throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(ConfigurationReader.getInstance().readStringValueForKey(ConfigurationKey.HOST), ConfigurationReader.getInstance().readIntegerValueForKey(ConfigurationKey.RMI_PORT));
         return (RemoteMessageService) registry.lookup(RemoteMessageService.REMOTE_OBJECT_NAME);
+    }
+
+    private void parseGameConfig() {
+        try {
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParser saxParser = factory.newSAXParser();
+            ConfigHandler handler = ConfigHandler.getInstance();
+
+            String projectRoot = System.getProperty("user.dir");
+            String relativePath = "files";
+            String configPath = projectRoot + File.separator + relativePath + File.separator + "gameConfig.xml";
+
+            saxParser.parse(new File(configPath), handler);
+            gameConfig = handler.getConfig();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static GameConfig getGameConfig() {
+        return gameConfig;
     }
 }
